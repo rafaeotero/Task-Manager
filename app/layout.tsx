@@ -52,12 +52,9 @@ export default function RootLayout({
             <SignInButton />
           </SignedOut>
           <SignedIn>
-            <header className="fixed top-20 left-17 z-50">
-              <UserButton showName />
-            </header>
             <ContextProvider>
               <GlobalStyleProvider>
-                <Sidebar />
+                <Sidebar /> {/* Agora com ShadCN */}
                 <div className="w-full">{children}</div>
               </GlobalStyleProvider>
             </ContextProvider>

@@ -69,28 +69,31 @@ export async function GET(req:Request) {
     }
 }
 
-export async function PUT(req:Request) {
+export async function PUT(req: Request) {
     try {
         const { userId } = await auth();
-        const { isComplete, id} = await req.json();
+        const { id, title, description, date, isComplete, isImportant } = await req.json();
 
-        if(!userId) {
-            return NextResponse.json({error: "Unauthorized", status: 401});
+        if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const task = await prisma.task.update({
-            where: {
-                id,
-            },
+            where: { id },
             data: {
+                title,
+                description,
+                date,
                 isComplete,
+                isImportant,
             },
         });
 
         return NextResponse.json(task);
-    }catch(error) {
+    } catch (error) {
         console.log("ERROR UPDATING TASK: ", error);
-        return NextResponse.json({error: "Error updating a task", status: 500});
+        return NextResponse.json({ error: "Error updating a task", status: 500 });
     }
 }
+
 

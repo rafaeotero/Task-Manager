@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import {
   Dialog,
@@ -15,35 +14,65 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useTaskStore } from "@/app/store/taskStore";
 
 export default function CreateTaskModal() {
+  const {
+    selectedTask,
+    createTask,
+    updateTask,
+    closeModal,
+    isModalOpen,
+    openModal,
+    allTasks,
+  } = useTaskStore();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
   const [isImportant, setIsImportant] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-  const [loading, setLoading] = useState(false); // Para desabilitar o botão enquanto salva
+  const [loading, setLoading] = useState(false);
+
+  // Preenche os campos se estiver editando
+  useEffect(() => {
+    if (selectedTask) {
+      setTitle(selectedTask.title);
+      setDescription(selectedTask.description);
+      setDeadline(selectedTask.date);
+      setIsComplete(selectedTask.isComplete);
+      setIsImportant(selectedTask.isImportant);
+    } else {
+      setTitle("");
+      setDescription("");
+      setDeadline("");
+      setIsComplete(false);
+      setIsImportant(false);
+    }
+  }, [selectedTask]);
 
   const handleSave = async (e: any) => {
     e.preventDefault();
-    console.log("Form submitted");
 
-    const task = {
+    const taskPayload = {
       title,
       description,
       date: deadline,
-      completed: isComplete,
-      important: isImportant,
+      isImportant,
+      isComplete,
     };
 
     try {
       setLoading(true);
-      const res = await axios.post("/api/tasks", task);
-
-      if (res.data.error) {
-        toast.error(res.data.error);
+      if (selectedTask) {
+        await updateTask({ id: selectedTask.id, ...taskPayload });
+        console.log(taskPayload);
+        toast.success("Task updated successfully");
+      } else {
+        await createTask(taskPayload);
       }
-      toast.success("Task created successfully");
+      await allTasks();
+      closeModal();
     } catch (error) {
       toast.error("Something went wrong");
       console.error(error);
@@ -53,18 +82,28 @@ export default function CreateTaskModal() {
   };
 
   return (
-    <Dialog>
+    <Dialog
+      open={isModalOpen}
+      onOpenChange={(open) => {
+        if (!open) closeModal();
+      }}
+    >
       <DialogTrigger asChild>
-        <Button variant="default">Create New Task</Button>
+        {/* Este botão abre o modal para criação; se preferir, pode ser exibido em outro lugar */}
+        <Button variant="default" onClick={openModal}>
+          Create New Task
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-black">Create a New Task</DialogTitle>
+          <DialogTitle className="text-black">
+            {selectedTask ? "Edit Task" : "Create a New Task"}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
-          <Toaster /> {/* Exibe os toasts */}
-          {/* Título */}
+          <Toaster />
+          {/* Campo Title */}
           <div className="flex flex-col">
             <Label className="text-black">Title</Label>
             <Input
@@ -74,7 +113,7 @@ export default function CreateTaskModal() {
               placeholder="Task title..."
             />
           </div>
-          {/* Descrição */}
+          {/* Campo Description */}
           <div className="flex flex-col">
             <Label className="text-black">Description</Label>
             <Textarea
@@ -84,7 +123,7 @@ export default function CreateTaskModal() {
               placeholder="Task description..."
             />
           </div>
-          {/* Prazo */}
+          {/* Campo Deadline */}
           <div className="flex flex-col">
             <Label className="text-black">Deadline</Label>
             <Input
@@ -100,7 +139,7 @@ export default function CreateTaskModal() {
               <Checkbox
                 id="important"
                 checked={isImportant}
-                onCheckedChange={setIsImportant}
+                onCheckedChange={(checked) => setIsImportant(checked === true)}
               />
               <Label className="text-black" htmlFor="important">
                 Important
@@ -110,16 +149,16 @@ export default function CreateTaskModal() {
               <Checkbox
                 id="complete"
                 checked={isComplete}
-                onCheckedChange={setIsComplete}
+                onCheckedChange={(checked) => setIsComplete(checked === true)}
               />
               <Label className="text-black" htmlFor="complete">
                 Complete
               </Label>
             </div>
           </div>
-          {/* Botão de Salvar */}
+          {/* Botão de salvar */}
           <Button onClick={handleSave} disabled={loading}>
-            {loading ? "Saving..." : "Save Task"}
+            {loading ? "Saving..." : selectedTask ? "Update Task" : "Save Task"}
           </Button>
         </div>
       </DialogContent>

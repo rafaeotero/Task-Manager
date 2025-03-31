@@ -3,8 +3,9 @@
 import React from "react";
 import { edit, trash } from "@/app/utils/Icons";
 import styled from "styled-components";
-import { useGlobalState } from "@/app/context/globalProvider";
+import { useTaskStore } from "@/app/store/taskStore";
 import formatDate from "@/app/utils/fomatDate";
+import { useGlobalState } from "@/app/context/globalProvider";
 
 interface Props {
   title: string;
@@ -15,7 +16,9 @@ interface Props {
 }
 
 function TaskItem({ title, description, date, isComplete, id }: Props) {
-  const { theme, deleteTask, updateTask } = useGlobalState();
+  // Funções de task vêm do Zustand; o tema permanece vindo do GlobalProvider
+  const { deleteTask, updateTask, setSelectedTask, openModal } = useTaskStore();
+  const { theme } = useGlobalState();
   const formatedDate = formatDate(date);
 
   return (
@@ -28,39 +31,36 @@ function TaskItem({ title, description, date, isComplete, id }: Props) {
           {isComplete ? (
             <button
               className="completed"
-              onClick={() => {
-                const task = {
-                  id,
-                  isComplete: !isComplete,
-                };
-
-                updateTask(task);
-              }}
+              onClick={() => updateTask({ id, isComplete: !isComplete })}
             >
               Completed
             </button>
           ) : (
             <button
               className="incomplete"
-              onClick={() => {
-                const task = {
-                  id,
-                  isComplete: !isComplete,
-                };
-
-                updateTask(task);
-              }}
+              onClick={() => updateTask({ id, isComplete: !isComplete })}
             >
               Incomplete
             </button>
           )}
-          <button className="edit">{edit}</button>
           <button
-            className="delete"
+            className="edit"
             onClick={() => {
-              deleteTask(id);
+              // Define a task selecionada para edição e abre o modal
+              setSelectedTask({
+                id,
+                title,
+                description,
+                date,
+                isComplete,
+                isImportant: false,
+              });
+              openModal();
             }}
           >
+            {edit}
+          </button>
+          <button className="delete" onClick={() => deleteTask(id)}>
             {trash}
           </button>
         </div>
