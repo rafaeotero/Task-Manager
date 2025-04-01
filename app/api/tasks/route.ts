@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/app/utils/connect";
 import { auth } from "@clerk/nextjs/server";
-import { useAuth } from "@clerk/nextjs";
-import { revalidatePath } from "next/cache";
+
 
 export async function POST(req:Request) {
     try {

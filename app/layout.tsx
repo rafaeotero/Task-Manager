@@ -8,9 +8,7 @@ import {
   ClerkProvider,
   SignedIn,
   SignedOut,
-  SignIn,
   SignInButton,
-  UserButton,
 } from "@clerk/nextjs";
 
 const geistSans = Geist({
@@ -54,7 +52,7 @@ export default function RootLayout({
           <SignedIn>
             <ContextProvider>
               <GlobalStyleProvider>
-                <Sidebar /> {/* Agora com ShadCN */}
+                <Sidebar />
                 <div className="w-full">{children}</div>
               </GlobalStyleProvider>
             </ContextProvider>

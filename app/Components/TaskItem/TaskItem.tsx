@@ -1,11 +1,16 @@
 "use client";
 
-import React from "react";
-import { edit, trash } from "@/app/utils/Icons";
-import styled from "styled-components";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useTaskStore } from "@/app/store/taskStore";
 import formatDate from "@/app/utils/fomatDate";
-import { useGlobalState } from "@/app/context/globalProvider";
+import { edit, trash } from "@/app/utils/Icons";
 
 interface Props {
   title: string;
@@ -15,38 +20,36 @@ interface Props {
   id: string;
 }
 
-function TaskItem({ title, description, date, isComplete, id }: Props) {
-  // Funções de task vêm do Zustand; o tema permanece vindo do GlobalProvider
+export default function TaskItem({
+  title,
+  description,
+  date,
+  isComplete,
+  id,
+}: Props) {
   const { deleteTask, updateTask, setSelectedTask, openModal } = useTaskStore();
-  const { theme } = useGlobalState();
   const formatedDate = formatDate(date);
 
   return (
-    <TaskItemStyled theme={theme}>
-      <div>
-        <h1>{title}</h1>
-        <p>{description}</p>
-        <p className="date">{formatedDate}</p>
-        <div className="task-footer">
-          {isComplete ? (
-            <button
-              className="completed"
-              onClick={() => updateTask({ id, isComplete: !isComplete })}
-            >
-              Completed
-            </button>
-          ) : (
-            <button
-              className="incomplete"
-              onClick={() => updateTask({ id, isComplete: !isComplete })}
-            >
-              Incomplete
-            </button>
-          )}
-          <button
-            className="edit"
+    <Card className="w-full shadow-md border border-gray-300">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-600">{description}</p>
+        <p className="text-sm text-gray-400 mt-2">{formatedDate}</p>
+      </CardContent>
+      <CardFooter className="flex justify-between items-center">
+        <Button
+          className={`${isComplete ? "bg-green-500" : "bg-red-500"} text-white`}
+          onClick={() => updateTask({ id, isComplete: !isComplete })}
+        >
+          {isComplete ? "Completed" : "Incomplete"}
+        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
             onClick={() => {
-              // Define a task selecionada para edição e abre o modal
               setSelectedTask({
                 id,
                 title,
@@ -59,64 +62,12 @@ function TaskItem({ title, description, date, isComplete, id }: Props) {
             }}
           >
             {edit}
-          </button>
-          <button className="delete" onClick={() => deleteTask(id)}>
+          </Button>
+          <Button variant="ghost" onClick={() => deleteTask(id)}>
             {trash}
-          </button>
+          </Button>
         </div>
-      </div>
-    </TaskItemStyled>
+      </CardFooter>
+    </Card>
   );
 }
-
-const TaskItemStyled = styled.div`
-  padding: 1.2rem 1rem;
-  border-radius: 1rem;
-  background-color: ${(props) => props.theme.colorGrey4};
-  box-shadow: ${(props) => props.theme.shadow7};
-  border: 2px solid ${(props) => props.theme.colorGrey5};
-
-  .date {
-    margin-top: 110px;
-  }
-
-  > h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-
-  .task-footer {
-    display: flex;
-    align-items: center;
-    gap: 1.2 rem;
-
-    button {
-      border: none;
-      outline: none;
-      cursor: pointer;
-
-      i {
-        font-size: 1.4rem;
-        color: white;
-      }
-    }
-
-    .edit {
-      margin-left: auto;
-    }
-
-    .completed,
-    .incomplete {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background: ${(props) => props.theme.colorDanger};
-      border-radius: 30px;
-    }
-
-    .completed {
-      background: ${(props) => props.theme.colorGreenDark};
-    }
-  }
-`;
-
-export default TaskItem;

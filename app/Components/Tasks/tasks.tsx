@@ -4,13 +4,17 @@ import React from "react";
 import styled from "styled-components";
 import TaskItem from "../TaskItem/TaskItem";
 import CreateTaskModal from "../Modals/CreateTask";
+import { useLoadTasks, useTaskStore } from "@/app/store/taskStore";
 
 interface Props {
   title: string;
   tasks: any[];
 }
 
-function Tasks({ title, tasks }: Props) {
+function Tasks({ title }: Props) {
+  useLoadTasks(); // Carrega as tasks ao montar o componente
+  const { tasks } = useTaskStore(); // Obtém as tasks do Zustand
+
   return (
     <TaskStyled>
       <h1>{title}</h1>

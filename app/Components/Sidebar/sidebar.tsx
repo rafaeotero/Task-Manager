@@ -10,13 +10,10 @@ import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import { useGlobalState } from "@/app/context/globalProvider";
 import menu from "@/app/utils/menu";
 import { UserButton } from "@clerk/nextjs";
 
 export default function Sidebar() {
-  const { theme } = useGlobalState();
-  const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
