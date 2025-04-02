@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Sidebar from "./Components/Sidebar/sidebar";
-import GlobalStyleProvider from "./providers/GlobalStyleProvider";
-import ContextProvider from "./providers/ContextProvider";
+import Sidebar from "../features/TaskManager/Components/Sidebar/sidebar";
 import {
   ClerkProvider,
   SignedIn,
@@ -50,12 +48,8 @@ export default function RootLayout({
             <SignInButton />
           </SignedOut>
           <SignedIn>
-            <ContextProvider>
-              <GlobalStyleProvider>
-                <Sidebar />
-                <div className="w-full">{children}</div>
-              </GlobalStyleProvider>
-            </ContextProvider>
+            <Sidebar />
+            <div className="w-full">{children}</div>
           </SignedIn>
         </body>
       </html>

@@ -1,7 +1,7 @@
 "use client";
 
-import Tasks from "./Components/Tasks/tasks";
-import { useTaskStore } from "./store/taskStore";
+import Tasks from "../features/TaskManager/Components/Tasks/tasks";
+import { useTaskStore } from "../features/TaskManager/store/taskStore";
 
 export default function Home() {
   const { tasks } = useTaskStore();

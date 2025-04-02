@@ -14,17 +14,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useTaskStore } from "@/app/store/taskStore";
+import { useTaskStore } from "../../store/taskStore";
 
 export default function CreateTaskModal() {
   const {
     selectedTask,
-    createTask,
-    updateTask,
+    addTask,
+    editTask,
     closeModal,
     isModalOpen,
     openModal,
-    allTasks,
+    fetchTasks,
   } = useTaskStore();
 
   const [title, setTitle] = useState("");
@@ -65,13 +65,13 @@ export default function CreateTaskModal() {
     try {
       setLoading(true);
       if (selectedTask) {
-        await updateTask({ id: selectedTask.id, ...taskPayload });
+        await editTask({ id: selectedTask.id, ...taskPayload });
         console.log(taskPayload);
         toast.success("Task updated successfully");
       } else {
-        await createTask(taskPayload);
+        await addTask(taskPayload);
       }
-      await allTasks();
+      await fetchTasks();
       closeModal();
     } catch (error) {
       toast.error("Something went wrong");

@@ -4,7 +4,8 @@ import React from "react";
 import styled from "styled-components";
 import TaskItem from "../TaskItem/TaskItem";
 import CreateTaskModal from "../Modals/CreateTask";
-import { useLoadTasks, useTaskStore } from "@/app/store/taskStore";
+import { useTaskStore } from "../../store/taskStore";
+import { useEffect } from "react";
 
 interface Props {
   title: string;
@@ -12,8 +13,11 @@ interface Props {
 }
 
 function Tasks({ title }: Props) {
-  useLoadTasks(); // Carrega as tasks ao montar o componente
-  const { tasks } = useTaskStore(); // Obtém as tasks do Zustand
+  const { fetchTasks, tasks } = useTaskStore(); // Obtém as tasks do Zustand
+
+  useEffect(() => {
+    fetchTasks(); // Chama a função para buscar as tasks
+  }, [fetchTasks]);
 
   return (
     <TaskStyled>

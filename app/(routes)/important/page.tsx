@@ -1,10 +1,12 @@
 "use client";
 import React from "react";
-import { useGlobalState } from "../../context/globalProvider";
-import Tasks from "../../Components/Tasks/tasks";
+import Tasks from "../../../features/TaskManager/Components/Tasks/tasks";
+import { useTaskStore } from "@/features/TaskManager/store/taskStore";
 
 function page() {
-  const { importantTasks } = useGlobalState();
+  const tasks = useTaskStore((state) => state.tasks);
+  const importantTasks = tasks.filter((task) => task.isImportant);
+
   return <Tasks title="Important Tasks" tasks={importantTasks} />;
 }
 

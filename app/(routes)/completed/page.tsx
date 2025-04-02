@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
-import { useGlobalState } from "../../context/globalProvider";
-import Tasks from "../../Components/Tasks/tasks";
+import Tasks from "../../../features/TaskManager/Components/Tasks/tasks";
+import { useTaskStore } from "@/features/TaskManager/store/taskStore";
 
 function page() {
-  const { completedTasks } = useGlobalState();
+  const tasks = useTaskStore((state) => state.tasks);
+  const completedTasks = tasks.filter((task) => task.isComplete);
   return <Tasks title="Completed Tasks" tasks={completedTasks} />;
 }
 

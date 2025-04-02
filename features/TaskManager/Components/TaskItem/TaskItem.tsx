@@ -8,7 +8,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useTaskStore } from "@/app/store/taskStore";
+import { useTaskStore } from "../../store/taskStore";
 import formatDate from "@/app/utils/fomatDate";
 import { edit, trash } from "@/app/utils/Icons";
 
@@ -27,7 +27,7 @@ export default function TaskItem({
   isComplete,
   id,
 }: Props) {
-  const { deleteTask, updateTask, setSelectedTask, openModal } = useTaskStore();
+  const { removeTask, editTask, setSelectedTask, openModal } = useTaskStore();
   const formatedDate = formatDate(date);
 
   return (
@@ -42,7 +42,7 @@ export default function TaskItem({
       <CardFooter className="flex justify-between items-center">
         <Button
           className={`${isComplete ? "bg-green-500" : "bg-red-500"} text-white`}
-          onClick={() => updateTask({ id, isComplete: !isComplete })}
+          onClick={() => editTask({ id, isComplete: !isComplete })}
         >
           {isComplete ? "Completed" : "Incomplete"}
         </Button>
@@ -63,7 +63,7 @@ export default function TaskItem({
           >
             {edit}
           </Button>
-          <Button variant="ghost" onClick={() => deleteTask(id)}>
+          <Button variant="ghost" onClick={() => removeTask(id)}>
             {trash}
           </Button>
         </div>
