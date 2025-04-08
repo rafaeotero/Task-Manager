@@ -23,6 +23,7 @@ interface TaskStore {
   setSelectedTask: (task: Task | null) => void;
   openModal: () => void;
   closeModal: () => void;
+
   completedTasks: () => Task[];
   incompleteTasks: () => Task[];
   importantTasks: () => Task[];
@@ -52,7 +53,7 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       await get().fetchTasks();
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong addTask");
     }
   },
 

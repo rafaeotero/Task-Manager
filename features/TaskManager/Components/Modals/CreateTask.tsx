@@ -34,12 +34,11 @@ export default function CreateTaskModal() {
   const [isComplete, setIsComplete] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Preenche os campos se estiver editando
   useEffect(() => {
     if (selectedTask) {
       setTitle(selectedTask.title);
-      setDescription(selectedTask.description);
-      setDeadline(selectedTask.date);
+      setDescription(selectedTask.description || "");
+      setDeadline(selectedTask.date || "");
       setIsComplete(selectedTask.isComplete);
       setIsImportant(selectedTask.isImportant);
     } else {
@@ -66,7 +65,6 @@ export default function CreateTaskModal() {
       setLoading(true);
       if (selectedTask) {
         await editTask({ id: selectedTask.id, ...taskPayload });
-        console.log(taskPayload);
         toast.success("Task updated successfully");
       } else {
         await addTask(taskPayload);
@@ -89,75 +87,97 @@ export default function CreateTaskModal() {
       }}
     >
       <DialogTrigger asChild>
-        {/* Este botão abre o modal para criação; se preferir, pode ser exibido em outro lugar */}
-        <Button variant="default" onClick={openModal}>
+        <Button
+          variant="default"
+          onClick={openModal}
+          data-testid="open-modal-button"
+        >
           Create New Task
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent data-testid="task-modal">
         <DialogHeader>
-          <DialogTitle className="text-black">
+          <DialogTitle className="text-black" data-testid="modal-title">
             {selectedTask ? "Edit Task" : "Create a New Task"}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4" data-testid="form-container">
           <Toaster />
-          {/* Campo Title */}
+
           <div className="flex flex-col">
-            <Label className="text-black">Title</Label>
+            <Label className="text-black" htmlFor="title">
+              Title
+            </Label>
             <Input
+              id="title"
               className="text-black"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Task title..."
+              data-testid="input-title"
             />
           </div>
-          {/* Campo Description */}
+
           <div className="flex flex-col">
-            <Label className="text-black">Description</Label>
+            <Label className="text-black" htmlFor="description">
+              Description
+            </Label>
             <Textarea
+              id="description"
               className="text-black"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Task description..."
+              data-testid="input-description"
             />
           </div>
-          {/* Campo Deadline */}
+
           <div className="flex flex-col">
-            <Label className="text-black">Deadline</Label>
+            <Label className="text-black" htmlFor="deadline">
+              Deadline
+            </Label>
             <Input
+              id="deadline"
               className="text-black"
               type="date"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
+              data-testid="input-deadline"
             />
           </div>
-          {/* Checkboxes */}
+
           <div className="flex gap-4">
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="important"
                 checked={isImportant}
                 onCheckedChange={(checked) => setIsImportant(checked === true)}
+                data-testid="checkbox-important"
               />
               <Label className="text-black" htmlFor="important">
                 Important
               </Label>
             </div>
+
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="complete"
                 checked={isComplete}
                 onCheckedChange={(checked) => setIsComplete(checked === true)}
+                data-testid="checkbox-complete"
               />
               <Label className="text-black" htmlFor="complete">
                 Complete
               </Label>
             </div>
           </div>
-          {/* Botão de salvar */}
-          <Button onClick={handleSave} disabled={loading}>
+
+          <Button
+            onClick={handleSave}
+            disabled={loading}
+            data-testid="save-task-button"
+          >
             {loading ? "Saving..." : selectedTask ? "Update Task" : "Save Task"}
           </Button>
         </div>

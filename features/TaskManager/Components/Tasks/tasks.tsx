@@ -12,12 +12,8 @@ interface Props {
   tasks: any[];
 }
 
-function Tasks({ title }: Props) {
-  const { fetchTasks, tasks } = useTaskStore(); // Obtém as tasks do Zustand
-
-  useEffect(() => {
-    fetchTasks(); // Chama a função para buscar as tasks
-  }, [fetchTasks]);
+function Tasks({ title, tasks }: Props) {
+  console.log(`Rendering ${title}:`, tasks);
 
   return (
     <TaskStyled>
@@ -27,7 +23,7 @@ function Tasks({ title }: Props) {
           <TaskItem
             key={task.id}
             title={task.title}
-            description={task.description}
+            description={task.description ?? ""}
             date={task.date}
             isComplete={task.isComplete}
             id={task.id}

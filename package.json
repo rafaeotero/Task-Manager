@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "auth": "npx playwright test e2e/auth.setup.ts --project=setup",
+    "test:e2e": "npx playwright test"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.5",
@@ -35,6 +38,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.51.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

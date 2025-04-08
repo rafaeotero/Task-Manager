@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTaskStore } from "../../store/taskStore";
 import formatDate from "@/app/utils/fomatDate";
-import { edit, trash } from "@/app/utils/Icons";
+import { edit, trash } from "@/app/utils/icons";
 
 interface Props {
   title: string;
@@ -31,7 +31,10 @@ export default function TaskItem({
   const formatedDate = formatDate(date);
 
   return (
-    <Card className="w-full shadow-md border border-gray-300">
+    <Card
+      className="w-full shadow-md border border-gray-300"
+      data-testid="task-item" // ⬅️ Aqui está a adição
+    >
       <CardHeader>
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
       </CardHeader>
@@ -49,6 +52,8 @@ export default function TaskItem({
         <div className="flex gap-2">
           <Button
             variant="ghost"
+            aria-label="Edit task"
+            data-testid={`edit-task-button-${id}`}
             onClick={() => {
               setSelectedTask({
                 id,
@@ -63,7 +68,12 @@ export default function TaskItem({
           >
             {edit}
           </Button>
-          <Button variant="ghost" onClick={() => removeTask(id)}>
+          <Button
+            variant="ghost"
+            aria-label="Delete task"
+            data-testid={`delete-task-button-${id}`}
+            onClick={() => removeTask(id)}
+          >
             {trash}
           </Button>
         </div>

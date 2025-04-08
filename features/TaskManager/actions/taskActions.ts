@@ -37,7 +37,7 @@ export async function createTask({
     },
   });
 
-  revalidatePath("/"); // Atualiza a página após alteração
+  revalidatePath("/"); 
 }
 
 export async function updateTask({

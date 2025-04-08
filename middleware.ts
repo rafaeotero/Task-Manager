@@ -1,5 +1,9 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
+if (!process.env.CLERK_SECRET_KEY) {
+  throw new Error("CLERK_SECRET_KEY is missing in environment variables");
+}
+
 export default clerkMiddleware();
 
 export const config = {
